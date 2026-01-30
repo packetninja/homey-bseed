@@ -1,0 +1,42 @@
+# Homey build artifacts
+.homeybuild/
+*.tar.gz
+
+# Node modules
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.bak
+*.old
+*.backup
+temp/
+tmp/
+
+# Environment
+.env
+.env.local
+
+# Scripts (cleanup/optimization scripts - not needed in repo)
+cleanup_*.sh
+optimize_*.sh
+
+# Package lock (optional - uncomment if you want to commit it)
+# package-lock.json

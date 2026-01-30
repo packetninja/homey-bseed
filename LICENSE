@@ -1,0 +1,44 @@
+MIT License
+
+Copyright (c) 2026 Attilla de Groot
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+## Attribution
+
+This project is a derivative work based on:
+
+**Universal Tuya Zigbee** by Dylan Rajasekaram
+Copyright (c) 2025 Dylan Rajasekaram
+Licensed under the MIT License
+Repository: https://github.com/dlnraja/com.tuya.zigbee
+
+Which itself is based on:
+
+**Tuya Zigbee App** by Johan Bendz
+Licensed under the MIT License
+
+---
+
+This BSEED development app contains a subset of drivers and libraries from the
+Universal Tuya Zigbee app, optimized for development purposes. All original
+code, architecture, and implementations are credited to Dylan Rajasekaram and
+Johan Bendz under the MIT License.

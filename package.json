@@ -1,0 +1,16 @@
+{
+  "name": "com.bseed.zigbee",
+  "version": "1.0.0",
+  "description": "App for BSEED devicdes",
+  "main": "app.js",
+  "dependencies": {
+    "homey-zigbeedriver": "^2.2.2"
+  },
+  "devDependencies": {
+    "homey": "^3.12.2"
+  },
+  "scripts": {
+    "validate": "homey app validate",
+    "build": "homey app build"
+  }
+}

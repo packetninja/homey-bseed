@@ -35,9 +35,7 @@ class WallSwitch1Gang1WayDevice extends PhysicalButtonMixin(HybridSwitchBase) {
   }
 
   async onNodeInit({ zclNode }) {
-    this.log('════════════════════════════════════════');
-    this.log('Wall Switch 1-Gang 1-Way initializing...');
-    this.log('════════════════════════════════════════');
+    this.log('Wall Switch 1-Gang initializing...');
 
     // Track state for detecting physical button presses
     this._lastOnoffState = null;
@@ -53,9 +51,7 @@ class WallSwitch1Gang1WayDevice extends PhysicalButtonMixin(HybridSwitchBase) {
     // Override capability listener to track app commands
     this._setupPhysicalButtonFlowDetection();
 
-    this.log('════════════════════════════════════════');
-    this.log('Wall Switch 1-Gang 1-Way ready');
-    this.log('════════════════════════════════════════');
+    this.log('Wall Switch 1-Gang ready');
   }
 
   /**

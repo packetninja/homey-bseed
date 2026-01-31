@@ -36,13 +36,10 @@ const POWER_ON_BEHAVIOR = {
 class WallDimmer1Gang1Way extends TuyaSpecificClusterDevice {
 
   async onNodeInit({zclNode}) {
+    this.log('WallDimmer1Gang1Way initializing...');
 
-    this.log('════════════════════════════════════════');
-    this.log('WallDimmer1Gang1Way onNodeInit STARTING');
-    this.log('════════════════════════════════════════');
-    
     await super.onNodeInit({zclNode});
-    
+
     this.printNode();
 
     // v5.5.755: PR #112 (packetninja) - Track state for detecting physical button presses
@@ -90,9 +87,7 @@ class WallDimmer1Gang1Way extends TuyaSpecificClusterDevice {
     // v5.5.799: Apply saved settings after init (with delay for device stability)
     setTimeout(() => this._applyInitialSettings(), 3000);
 
-    this.log('════════════════════════════════════════');
-    this.log('SwitchDimmer1Gang onNodeInit COMPLETE');
-    this.log('════════════════════════════════════════');
+    this.log('WallDimmer1Gang1Way ready');
   }
   
   /**
@@ -168,33 +163,35 @@ class WallDimmer1Gang1Way extends TuyaSpecificClusterDevice {
   async _applyInitialSettings() {
     if (this._settingsApplied) return;
     this._settingsApplied = true;
-    
+
     try {
       const settings = this.getSettings();
-      this.log('📋 Applying initial settings:', settings);
+      if (DEBUG_MODE) {
+        this.log('📋 Applying initial settings:', settings);
+      }
       
       // Apply min_brightness if set
       if (settings.min_brightness && settings.min_brightness > 1) {
         const minBrightness = Math.round(10 + ((settings.min_brightness / 100) * 990));
-        this.log(`Applying min_brightness: ${settings.min_brightness}% → ${minBrightness}`);
-        await this.sendTuyaCommand(dataPoints.minBrightness, minBrightness, 'value').catch(e => 
-          this.log('min_brightness not supported by this device'));
+        await this.sendTuyaCommand(dataPoints.minBrightness, minBrightness, 'value').catch(e => {
+          if (DEBUG_MODE) this.log('min_brightness not supported by this device');
+        });
       }
-      
+
       // Apply power_on_behavior if not default
       if (settings.power_on_behavior && settings.power_on_behavior !== '2') {
         const powerOnValue = parseInt(settings.power_on_behavior, 10);
-        this.log(`Applying power_on_behavior: ${powerOnValue}`);
-        await this.sendTuyaCommand(dataPoints.powerOnBehavior, powerOnValue, 'enum').catch(e =>
-          this.log('power_on_behavior not supported by this device'));
+        await this.sendTuyaCommand(dataPoints.powerOnBehavior, powerOnValue, 'enum').catch(e => {
+          if (DEBUG_MODE) this.log('power_on_behavior not supported by this device');
+        });
       }
-      
+
       // Apply light_type if not default
       if (settings.light_type && settings.light_type !== '0') {
         const lightTypeValue = parseInt(settings.light_type, 10);
-        this.log(`Applying light_type: ${lightTypeValue}`);
-        await this.sendTuyaCommand(dataPoints.lightType, lightTypeValue, 'enum').catch(e =>
-          this.log('light_type not supported by this device'));
+        await this.sendTuyaCommand(dataPoints.lightType, lightTypeValue, 'enum').catch(e => {
+          if (DEBUG_MODE) this.log('light_type not supported by this device');
+        });
       }
 
       // Apply backlight_mode if not default
@@ -223,7 +220,10 @@ class WallDimmer1Gang1Way extends TuyaSpecificClusterDevice {
    */
   handleTuyaResponse(data) {
     const isPhysical = !this._appCommandPending;
-    this.log(`>>> Tuya response (dp: ${data?.dp}) - ${isPhysical ? 'PHYSICAL' : 'APP'}`);
+    // Only log if debug mode is enabled
+    if (DEBUG_MODE) {
+      this.log(`>>> Tuya response (dp: ${data?.dp}) - ${isPhysical ? 'PHYSICAL' : 'APP'}`);
+    }
     this.handleTuyaDataReport(data, isPhysical);
   }
 
@@ -266,11 +266,13 @@ class WallDimmer1Gang1Way extends TuyaSpecificClusterDevice {
       
       // Only process if state actually changed (heartbeat filter)
       if (this._lastOnoffState !== state) {
-        this.log(`State changed: ${this._lastOnoffState} → ${state} (${isPhysicalPress ? 'PHYSICAL' : 'APP'})`);
-        
+        if (DEBUG_MODE || isPhysicalPress) {
+          this.log(`State changed: ${this._lastOnoffState} → ${state} (${isPhysicalPress ? 'PHYSICAL' : 'APP'})`);
+        }
+
         this._lastOnoffState = state;
         this.setCapabilityValue('onoff', state).catch(this.error);
-        
+
         // Trigger flow cards ONLY if this is a physical button press
         if (isPhysicalPress) {
           const flowCardId = state ? 'wall_dimmer_1gang_1way_turned_on' : 'wall_dimmer_1gang_1way_turned_off';
@@ -298,14 +300,16 @@ class WallDimmer1Gang1Way extends TuyaSpecificClusterDevice {
       // Only process if brightness changed significantly (~1%)
       const changeThreshold = 10;
       if (this._lastBrightnessValue === null || Math.abs(brightnessRaw - this._lastBrightnessValue) >= changeThreshold) {
-        this.log(`Brightness changed: ${this._lastBrightnessValue} → ${brightnessRaw} (${brightness.toFixed(2)}) (${isPhysicalPress ? 'PHYSICAL' : 'APP'})`);
-        
+        if (DEBUG_MODE || isPhysicalPress) {
+          this.log(`Brightness changed: ${this._lastBrightnessValue} → ${brightnessRaw} (${brightness.toFixed(2)}) (${isPhysicalPress ? 'PHYSICAL' : 'APP'})`);
+        }
+
         const brightnessIncreased = this._lastBrightnessValue !== null && brightnessRaw > this._lastBrightnessValue;
         const brightnessDecreased = this._lastBrightnessValue !== null && brightnessRaw < this._lastBrightnessValue;
-        
+
         this._lastBrightnessValue = brightnessRaw;
         this.setCapabilityValue('dim', brightness).catch(this.error);
-        
+
         // Trigger flow cards ONLY if this is a physical button press
         if (isPhysicalPress) {
           if (brightnessIncreased) {
@@ -332,51 +336,47 @@ class WallDimmer1Gang1Way extends TuyaSpecificClusterDevice {
         throw new Error('Tuya cluster not available');
       }
 
-      this.log(`════════════════════════════════════════`);
-      this.log(`Sending Tuya command: DP ${dp} = ${value} (${type})`);
-      this.log(`════════════════════════════════════════`);
+      if (DEBUG_MODE) {
+        this.log(`Sending Tuya command: DP ${dp} = ${value} (${type})`);
+      }
 
       let dataBuffer;
       let datatype;
-      
+
       switch (type) {
         case 'bool':
           dataBuffer = Buffer.alloc(1);
           dataBuffer.writeUInt8(value ? 1 : 0, 0);
           datatype = 1;
           break;
-          
+
         case 'value':
           dataBuffer = Buffer.alloc(4);
           dataBuffer.writeInt32BE(value, 0);
           datatype = 2;
           break;
-          
+
         case 'enum':
           dataBuffer = Buffer.alloc(1);
           dataBuffer.writeUInt8(Number(value), 0);
           datatype = 4;
           break;
-          
+
         case 'string':
           dataBuffer = Buffer.from(String(value), 'utf8');
           datatype = 3;
           break;
-          
+
         default:
           dataBuffer = Buffer.from([value]);
           datatype = 2;
       }
-
-      this.log('Data buffer:', dataBuffer);
-      this.log('Data type:', datatype);
 
       const lengthBuffer = Buffer.alloc(2);
       lengthBuffer.writeUInt16BE(dataBuffer.length, 0);
 
       const transid = Math.floor(Math.random() * 256);
 
-      this.log('Calling datapoint command...');
       await tuyaCluster.datapoint({
         status: 0,
         transid,
@@ -386,11 +386,12 @@ class WallDimmer1Gang1Way extends TuyaSpecificClusterDevice {
         data: dataBuffer,
       });
 
-      this.log('✅ Tuya command sent successfully');
+      if (DEBUG_MODE) {
+        this.log('✅ Tuya command sent');
+      }
 
     } catch (err) {
       this.error('Failed to send Tuya command:', err);
-      this.error('Error stack:', err.stack);
       throw err;
     }
   }

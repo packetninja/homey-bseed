@@ -40,3 +40,6 @@ optimize_*.sh
 
 # Package lock (optional - uncomment if you want to commit it)
 # package-lock.json
+
+# Claude AI documentation and context (private notes)
+claude/

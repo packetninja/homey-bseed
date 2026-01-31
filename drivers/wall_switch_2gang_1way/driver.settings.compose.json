@@ -121,6 +121,24 @@
           "nl": "Protocol Modus"
         },
         "value": "Detecting..."
+      },
+      {
+        "id": "firmware_app_version",
+        "type": "label",
+        "label": {
+          "en": "Firmware Version",
+          "nl": "Firmware Versie"
+        },
+        "value": "Unknown"
+      },
+      {
+        "id": "firmware_hw_version",
+        "type": "label",
+        "label": {
+          "en": "Hardware Version",
+          "nl": "Hardware Versie"
+        },
+        "value": "Unknown"
       }
     ]
   }

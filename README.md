@@ -79,11 +79,11 @@ Since this is a personal fork for development and testing, contributions should 
 
 ## Development Notes
 
-See `.claude/DEVELOPMENT.md` for detailed development documentation including:
+Detailed development documentation is maintained separately for:
 - Architecture and design patterns
 - How to add new drivers
-- Image processing workflow
-- Known issues and workarounds
+- Protocol detection and optimization
+- Known issues and investigations
 
 ## Credits
 

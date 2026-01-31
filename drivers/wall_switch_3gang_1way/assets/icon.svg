@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120" height="100" viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background plate -->
+  <rect x="5" y="15" width="110" height="70" rx="5" fill="#f5f5f5" stroke="#d0d0d0" stroke-width="2"/>
+
+  <!-- Gang 1 button -->
+  <circle cx="30" cy="50" r="12" fill="none" stroke="#4a90d9" stroke-width="2.5"/>
+  <circle cx="30" cy="50" r="6" fill="#4a90d9" opacity="0.3"/>
+
+  <!-- Gang 2 button -->
+  <circle cx="60" cy="50" r="12" fill="none" stroke="#4a90d9" stroke-width="2.5"/>
+  <circle cx="60" cy="50" r="6" fill="#4a90d9" opacity="0.3"/>
+
+  <!-- Gang 3 button -->
+  <circle cx="90" cy="50" r="12" fill="none" stroke="#4a90d9" stroke-width="2.5"/>
+  <circle cx="90" cy="50" r="6" fill="#4a90d9" opacity="0.3"/>
+</svg>

@@ -1,0 +1,96 @@
+{
+  "name": {
+    "en": "Wall Switch 3-Gang 1-Way",
+    "nl": "Muurschakelaar 3-Gang 1-Weg"
+  },
+  "class": "socket",
+  "capabilities": [
+    "onoff",
+    "onoff.gang2",
+    "onoff.gang3"
+  ],
+  "capabilitiesOptions": {
+    "onoff": {
+      "title": {
+        "en": "Gang 1",
+        "nl": "Gang 1"
+      }
+    },
+    "onoff.gang2": {
+      "title": {
+        "en": "Gang 2",
+        "nl": "Gang 2"
+      }
+    },
+    "onoff.gang3": {
+      "title": {
+        "en": "Gang 3",
+        "nl": "Gang 3"
+      }
+    }
+  },
+  "energy": {
+    "approximation": {
+      "usageOn": 100,
+      "usageOff": 1
+    }
+  },
+  "platforms": [
+    "local"
+  ],
+  "connectivity": [
+    "zigbee"
+  ],
+  "images": {
+    "small": "/drivers/wall_switch_3gang_1way/assets/images/small.png",
+    "large": "/drivers/wall_switch_3gang_1way/assets/images/large.png"
+  },
+  "zigbee": {
+    "manufacturerName": [
+      "_TZ3000_qkixdnon",
+      "_TZ3000_QKIXDNON",
+      "_tz3000_qkixdnon"
+    ],
+    "productId": [
+      "TS0003"
+    ],
+    "endpoints": {
+      "1": {
+        "clusters": [
+          0,
+          3,
+          4,
+          5,
+          6,
+          57344,
+          57345
+        ],
+        "bindings": []
+      },
+      "2": {
+        "clusters": [
+          4,
+          5,
+          6,
+          57345
+        ],
+        "bindings": []
+      },
+      "3": {
+        "clusters": [
+          4,
+          5,
+          6,
+          57345
+        ],
+        "bindings": []
+      }
+    },
+    "learnmode": {
+      "instruction": {
+        "en": "Press and hold the reset button for 5 seconds until the LED blinks, or toggle the switch on/off 3 times quickly.",
+        "nl": "Houd de resetknop 5 seconden ingedrukt totdat de LED knippert, of schakel de schakelaar 3 keer snel aan/uit."
+      }
+    }
+  }
+}

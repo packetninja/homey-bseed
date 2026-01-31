@@ -542,6 +542,198 @@
           ]
         }
       ]
+    },
+    {
+      "name": {
+        "en": "Wall Switch 3-Gang 1-Way",
+        "nl": "Muurschakelaar 3-Gang 1-Weg"
+      },
+      "class": "socket",
+      "capabilities": [
+        "onoff",
+        "onoff.gang2",
+        "onoff.gang3"
+      ],
+      "capabilitiesOptions": {
+        "onoff": {
+          "title": {
+            "en": "Gang 1",
+            "nl": "Gang 1"
+          }
+        },
+        "onoff.gang2": {
+          "title": {
+            "en": "Gang 2",
+            "nl": "Gang 2"
+          }
+        },
+        "onoff.gang3": {
+          "title": {
+            "en": "Gang 3",
+            "nl": "Gang 3"
+          }
+        }
+      },
+      "energy": {
+        "approximation": {
+          "usageOn": 100,
+          "usageOff": 1
+        }
+      },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "zigbee"
+      ],
+      "images": {
+        "small": "/drivers/wall_switch_3gang_1way/assets/images/small.png",
+        "large": "/drivers/wall_switch_3gang_1way/assets/images/large.png"
+      },
+      "zigbee": {
+        "manufacturerName": [
+          "_TZ3000_qkixdnon",
+          "_TZ3000_QKIXDNON",
+          "_tz3000_qkixdnon"
+        ],
+        "productId": [
+          "TS0003"
+        ],
+        "endpoints": {
+          "1": {
+            "clusters": [
+              0,
+              3,
+              4,
+              5,
+              6,
+              57344,
+              57345
+            ],
+            "bindings": []
+          },
+          "2": {
+            "clusters": [
+              4,
+              5,
+              6,
+              57345
+            ],
+            "bindings": []
+          },
+          "3": {
+            "clusters": [
+              4,
+              5,
+              6,
+              57345
+            ],
+            "bindings": []
+          }
+        },
+        "learnmode": {
+          "instruction": {
+            "en": "Press and hold the reset button for 5 seconds until the LED blinks, or toggle the switch on/off 3 times quickly.",
+            "nl": "Houd de resetknop 5 seconden ingedrukt totdat de LED knippert, of schakel de schakelaar 3 keer snel aan/uit."
+          }
+        }
+      },
+      "id": "wall_switch_3gang_1way",
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "🏷️ Gang Names",
+            "nl": "🏷️ Gang Namen"
+          },
+          "children": [
+            {
+              "id": "gang1_name",
+              "type": "text",
+              "label": {
+                "en": "Gang 1 Custom Name",
+                "nl": "Gang 1 Aangepaste Naam"
+              },
+              "hint": {
+                "en": "Custom name for Gang 1 (e.g., 'Inside Lights')",
+                "nl": "Aangepaste naam voor Gang 1 (bijv. 'Binnen Verlichting')"
+              },
+              "value": "Gang 1"
+            },
+            {
+              "id": "gang2_name",
+              "type": "text",
+              "label": {
+                "en": "Gang 2 Custom Name",
+                "nl": "Gang 2 Aangepaste Naam"
+              },
+              "hint": {
+                "en": "Custom name for Gang 2 (e.g., 'Outside Lights')",
+                "nl": "Aangepaste naam voor Gang 2 (bijv. 'Buiten Verlichting')"
+              },
+              "value": "Gang 2"
+            },
+            {
+              "id": "gang3_name",
+              "type": "text",
+              "label": {
+                "en": "Gang 3 Custom Name",
+                "nl": "Gang 3 Aangepaste Naam"
+              },
+              "hint": {
+                "en": "Custom name for Gang 3 (e.g., 'Patio Lights')",
+                "nl": "Aangepaste naam voor Gang 3 (bijv. 'Terras Verlichting')"
+              },
+              "value": "Gang 3"
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "💡 LED Indicator (Backlight)",
+            "nl": "💡 LED-indicator (Achtergrondverlichting)"
+          },
+          "children": [
+            {
+              "id": "backlight_mode",
+              "type": "dropdown",
+              "label": {
+                "en": "LED Indicator Mode",
+                "nl": "LED-indicator Modus"
+              },
+              "hint": {
+                "en": "Control when the LED indicator on the switch is lit",
+                "nl": "Bepaal wanneer de LED-indicator op de schakelaar brandt"
+              },
+              "value": "normal",
+              "values": [
+                {
+                  "id": "off",
+                  "label": {
+                    "en": "Always Off",
+                    "nl": "Altijd Uit"
+                  }
+                },
+                {
+                  "id": "normal",
+                  "label": {
+                    "en": "On when Switch ON (Normal)",
+                    "nl": "Aan wanneer Schakelaar AAN (Normaal)"
+                  }
+                },
+                {
+                  "id": "inverted",
+                  "label": {
+                    "en": "On when Switch OFF (Inverted)",
+                    "nl": "Aan wanneer Schakelaar UIT (Omgekeerd)"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ],
   "flow": {
@@ -747,6 +939,114 @@
             "filter": "driver_id=wall_switch_2gang_1way"
           }
         ]
+      },
+      {
+        "id": "wall_switch_3gang_1way_gang1_turned_on",
+        "title": {
+          "en": "Gang 1 turned on (physical button)",
+          "nl": "Gang 1 aangezet (fysieke knop)"
+        },
+        "hint": {
+          "en": "Triggered when gang 1 is turned on using the physical button",
+          "nl": "Geactiveerd wanneer gang 1 wordt aangezet met de fysieke knop"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wall_switch_3gang_1way"
+          }
+        ]
+      },
+      {
+        "id": "wall_switch_3gang_1way_gang1_turned_off",
+        "title": {
+          "en": "Gang 1 turned off (physical button)",
+          "nl": "Gang 1 uitgezet (fysieke knop)"
+        },
+        "hint": {
+          "en": "Triggered when gang 1 is turned off using the physical button",
+          "nl": "Geactiveerd wanneer gang 1 wordt uitgezet met de fysieke knop"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wall_switch_3gang_1way"
+          }
+        ]
+      },
+      {
+        "id": "wall_switch_3gang_1way_gang2_turned_on",
+        "title": {
+          "en": "Gang 2 turned on (physical button)",
+          "nl": "Gang 2 aangezet (fysieke knop)"
+        },
+        "hint": {
+          "en": "Triggered when gang 2 is turned on using the physical button",
+          "nl": "Geactiveerd wanneer gang 2 wordt aangezet met de fysieke knop"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wall_switch_3gang_1way"
+          }
+        ]
+      },
+      {
+        "id": "wall_switch_3gang_1way_gang2_turned_off",
+        "title": {
+          "en": "Gang 2 turned off (physical button)",
+          "nl": "Gang 2 uitgezet (fysieke knop)"
+        },
+        "hint": {
+          "en": "Triggered when gang 2 is turned off using the physical button",
+          "nl": "Geactiveerd wanneer gang 2 wordt uitgezet met de fysieke knop"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wall_switch_3gang_1way"
+          }
+        ]
+      },
+      {
+        "id": "wall_switch_3gang_1way_gang3_turned_on",
+        "title": {
+          "en": "Gang 3 turned on (physical button)",
+          "nl": "Gang 3 aangezet (fysieke knop)"
+        },
+        "hint": {
+          "en": "Triggered when gang 3 is turned on using the physical button",
+          "nl": "Geactiveerd wanneer gang 3 wordt aangezet met de fysieke knop"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wall_switch_3gang_1way"
+          }
+        ]
+      },
+      {
+        "id": "wall_switch_3gang_1way_gang3_turned_off",
+        "title": {
+          "en": "Gang 3 turned off (physical button)",
+          "nl": "Gang 3 uitgezet (fysieke knop)"
+        },
+        "hint": {
+          "en": "Triggered when gang 3 is turned off using the physical button",
+          "nl": "Geactiveerd wanneer gang 3 wordt uitgezet met de fysieke knop"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wall_switch_3gang_1way"
+          }
+        ]
       }
     ],
     "actions": [
@@ -825,6 +1125,139 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=wall_switch_2gang_1way"
+          },
+          {
+            "name": "mode",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "off",
+                "label": {
+                  "en": "Always Off",
+                  "nl": "Altijd Uit"
+                }
+              },
+              {
+                "id": "normal",
+                "label": {
+                  "en": "On when Switch ON (Normal)",
+                  "nl": "Aan wanneer Schakelaar AAN (Normaal)"
+                }
+              },
+              {
+                "id": "inverted",
+                "label": {
+                  "en": "On when Switch OFF (Inverted)",
+                  "nl": "Aan wanneer Schakelaar UIT (Omgekeerd)"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "wall_switch_3gang_1way_turn_on_gang1",
+        "title": {
+          "en": "Turn on Gang 1",
+          "nl": "Zet Gang 1 aan"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wall_switch_3gang_1way"
+          }
+        ]
+      },
+      {
+        "id": "wall_switch_3gang_1way_turn_off_gang1",
+        "title": {
+          "en": "Turn off Gang 1",
+          "nl": "Zet Gang 1 uit"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wall_switch_3gang_1way"
+          }
+        ]
+      },
+      {
+        "id": "wall_switch_3gang_1way_turn_on_gang2",
+        "title": {
+          "en": "Turn on Gang 2",
+          "nl": "Zet Gang 2 aan"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wall_switch_3gang_1way"
+          }
+        ]
+      },
+      {
+        "id": "wall_switch_3gang_1way_turn_off_gang2",
+        "title": {
+          "en": "Turn off Gang 2",
+          "nl": "Zet Gang 2 uit"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wall_switch_3gang_1way"
+          }
+        ]
+      },
+      {
+        "id": "wall_switch_3gang_1way_turn_on_gang3",
+        "title": {
+          "en": "Turn on Gang 3",
+          "nl": "Zet Gang 3 aan"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wall_switch_3gang_1way"
+          }
+        ]
+      },
+      {
+        "id": "wall_switch_3gang_1way_turn_off_gang3",
+        "title": {
+          "en": "Turn off Gang 3",
+          "nl": "Zet Gang 3 uit"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wall_switch_3gang_1way"
+          }
+        ]
+      },
+      {
+        "id": "wall_switch_3gang_1way_set_backlight",
+        "title": {
+          "en": "Set LED indicator mode",
+          "nl": "Stel LED-indicator modus in"
+        },
+        "titleFormatted": {
+          "en": "Set LED indicator to [[mode]]",
+          "nl": "Stel LED-indicator in op [[mode]]"
+        },
+        "hint": {
+          "en": "Control when the LED indicator on the switch is lit",
+          "nl": "Bepaal wanneer de LED-indicator op de schakelaar brandt"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wall_switch_3gang_1way"
           },
           {
             "name": "mode",

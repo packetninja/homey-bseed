@@ -1,0 +1,149 @@
+[
+  {
+    "type": "group",
+    "label": {
+      "en": "🏷️ Gang Names",
+      "nl": "🏷️ Gang Namen"
+    },
+    "children": [
+      {
+        "id": "gang1_name",
+        "type": "text",
+        "label": {
+          "en": "Gang 1 Custom Name",
+          "nl": "Gang 1 Aangepaste Naam"
+        },
+        "hint": {
+          "en": "Custom name for Gang 1 (e.g., 'Inside Lights')",
+          "nl": "Aangepaste naam voor Gang 1 (bijv. 'Binnen Verlichting')"
+        },
+        "value": "Gang 1"
+      },
+      {
+        "id": "gang2_name",
+        "type": "text",
+        "label": {
+          "en": "Gang 2 Custom Name",
+          "nl": "Gang 2 Aangepaste Naam"
+        },
+        "hint": {
+          "en": "Custom name for Gang 2 (e.g., 'Outside Lights')",
+          "nl": "Aangepaste naam voor Gang 2 (bijv. 'Buiten Verlichting')"
+        },
+        "value": "Gang 2"
+      },
+      {
+        "id": "gang3_name",
+        "type": "text",
+        "label": {
+          "en": "Gang 3 Custom Name",
+          "nl": "Gang 3 Aangepaste Naam"
+        },
+        "hint": {
+          "en": "Custom name for Gang 3 (e.g., 'Patio Lights')",
+          "nl": "Aangepaste naam voor Gang 3 (bijv. 'Terras Verlichting')"
+        },
+        "value": "Gang 3"
+      }
+    ]
+  },
+  {
+    "type": "group",
+    "label": {
+      "en": "💡 LED Indicator (Backlight)",
+      "nl": "💡 LED-indicator (Achtergrondverlichting)"
+    },
+    "children": [
+      {
+        "id": "backlight_mode",
+        "type": "dropdown",
+        "label": {
+          "en": "LED Indicator Mode",
+          "nl": "LED-indicator Modus"
+        },
+        "hint": {
+          "en": "Control when the LED indicator on the switch is lit",
+          "nl": "Bepaal wanneer de LED-indicator op de schakelaar brandt"
+        },
+        "value": "normal",
+        "values": [
+          {
+            "id": "off",
+            "label": {
+              "en": "Always Off",
+              "nl": "Altijd Uit"
+            }
+          },
+          {
+            "id": "normal",
+            "label": {
+              "en": "On when Switch ON (Normal)",
+              "nl": "Aan wanneer Schakelaar AAN (Normaal)"
+            }
+          },
+          {
+            "id": "inverted",
+            "label": {
+              "en": "On when Switch OFF (Inverted)",
+              "nl": "Aan wanneer Schakelaar UIT (Omgekeerd)"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "group",
+    "label": {
+      "en": "🔍 Debug Information",
+      "nl": "🔍 Debug Informatie"
+    },
+    "children": [
+      {
+        "id": "debug_last_action",
+        "type": "label",
+        "label": {
+          "en": "Last Action",
+          "nl": "Laatste Actie"
+        },
+        "value": "No actions yet"
+      },
+      {
+        "id": "debug_gang1_status",
+        "type": "label",
+        "label": {
+          "en": "Gang 1 Status",
+          "nl": "Gang 1 Status"
+        },
+        "value": "Unknown"
+      },
+      {
+        "id": "debug_gang2_status",
+        "type": "label",
+        "label": {
+          "en": "Gang 2 Status",
+          "nl": "Gang 2 Status"
+        },
+        "value": "Unknown"
+      },
+      {
+        "id": "debug_gang3_status",
+        "type": "label",
+        "label": {
+          "en": "Gang 3 Status",
+          "nl": "Gang 3 Status"
+        },
+        "value": "Unknown"
+      },
+      {
+        "id": "debug_protocol",
+        "type": "label",
+        "label": {
+          "en": "Protocol Mode",
+          "nl": "Protocol Modus"
+        },
+        "value": "Detecting..."
+      }
+    ]
+  }
+]

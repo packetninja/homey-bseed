@@ -16,9 +16,10 @@ This app is forked from [dlnraja/com.tuya.zigbee](https://github.com/dlnraja/com
 ## Current Status
 
 **Working:**
-- ✅ 1-gang wall switch (TS0001)
-- ✅ 1-gang dimmer (TS0601/TS004F)
-- ⚠️ 2-gang wall switch (TS0012) - **See known issues below**
+- ✅ 1-gang wall switch (TS0001) - Fully tested, working
+- ✅ 1-gang dimmer (TS0601/TS004F) - Fully tested, working
+- ⚠️ 2-gang wall switch (TS0012) - Working, but has known mirroring issue (see below)
+- 🔄 3-gang wall switch (TS0003) - Implemented, awaiting hardware testing
 
 **Known Issues:**
 - **2-gang switch (_TZ3000_xk5udnd6 / TS0012):** Firmware bug causes both gangs to mirror each other when controlled via app/Zigbee. Physical buttons work independently. This is a device firmware issue, not a driver bug.
@@ -30,6 +31,7 @@ This app is forked from [dlnraja/com.tuya.zigbee](https://github.com/dlnraja/com
 
 - **wall_switch_1gang_1way** - Single gang switch (TS0001, TS0011)
 - **wall_switch_2gang_1way** - Dual gang switch (TS0012, TS0013) ⚠️ _Known mirroring issue_
+- **wall_switch_3gang_1way** - Triple gang switch (TS0003) 🔄 _Untested, community contribution_
 - **wall_dimmer_1gang_1way** - Touch dimmer (TS0601, TS004F)
 
 ## Quick Start
@@ -65,8 +67,9 @@ The Universal Tuya Zigbee app (109 drivers, 14MB) exceeds Homey's remote debug p
 ## Future Plans
 
 - [ ] Resolve 2-gang mirroring issue (waiting for new hardware)
+- [ ] Test 3-gang switch with actual hardware
 - [ ] Implement sub-device support (separate cards per gang)
-- [ ] Add 3-gang and 4-gang switch support
+- [ ] Add 4-gang switch support
 - [ ] Contribute fixes back to Universal Tuya Zigbee app
 - [ ] Potentially release as standalone BSEED-focused app
 
@@ -74,15 +77,24 @@ The Universal Tuya Zigbee app (109 drivers, 14MB) exceeds Homey's remote debug p
 
 Since this is a personal fork for development and testing, contributions should generally go to the upstream [Universal Tuya Zigbee app](https://github.com/dlnraja/com.tuya.zigbee). However, if you have BSEED-specific insights or fixes, feel free to open an issue or discussion.
 
+## Development Notes
+
+See `.claude/DEVELOPMENT.md` for detailed development documentation including:
+- Architecture and design patterns
+- How to add new drivers
+- Image processing workflow
+- Known issues and workarounds
+
 ## Credits
 
 - **Original Author:** Dylan Rajasekaram ([dlnraja/com.tuya.zigbee](https://github.com/dlnraja/com.tuya.zigbee))
 - **Fork Maintainer:** Attilla de Groot (attilla@packet.ninja)
 - **Community:** Homey Community Forum contributors, Zigbee2MQTT project
+- **Product Images:** Official BSEED website ([bseed.com](https://www.bseed.com/))
 
 ## License
 
-Same as upstream: GPL-3.0
+Same as upstream: MIT License
 
 ---
 

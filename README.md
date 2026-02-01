@@ -18,20 +18,25 @@ This app is forked from [dlnraja/com.tuya.zigbee](https://github.com/dlnraja/com
 **Working:**
 - ✅ 1-gang wall switch (TS0001) - Fully tested, working
 - ✅ 1-gang dimmer (TS0601/TS004F) - Fully tested, working
-- ⚠️ 2-gang wall switch (TS0012) - Working, but has known mirroring issue (see below)
-- 🔄 3-gang wall switch (TS0003) - Implemented, awaiting hardware testing
+- ✅ **2-gang wall switch (TS0012)** - **Sub-device implementation complete!** Each gang is now a separate device card
+- ⏳ **3-gang wall switch (TS0003)** - Sub-device implementation complete, awaiting community testing
 
-**Known Issues:**
-- **2-gang switch (_TZ3000_xk5udnd6 / TS0012):** Firmware bug causes both gangs to mirror each other when controlled via app/Zigbee. Physical buttons work independently. This is a device firmware issue, not a driver bug.
-  - **Root cause:** Device firmware broadcasts OnOff commands to all endpoints via Zigbee groups instead of targeting specific endpoints
-  - **Workaround:** Physical buttons work correctly; app control will affect both gangs
-  - **Solution:** Waiting for new hardware with updated firmware
+**Recent Fixes:**
+- 🎉 **2-gang mirroring issue SOLVED!** (January 2026)
+  - **Root cause:** Homey firmware limitation handling multi-endpoint clusters
+  - **Solution:** Homey 12.10.0 update added "support for devices that use the same cluster multiple times"
+  - **Status:** Working perfectly - each gang controls independently
+
+- 🎉 **Sub-device implementation complete!** (February 2026)
+  - 2-gang creates 2 separate device cards (confirmed working)
+  - 3-gang creates 3 separate device cards (pending community testing)
+  - Benefits: Natural voice control, zone assignment per gang, cleaner UI
 
 ## Included Drivers
 
 - **wall_switch_1gang_1way** - Single gang switch (TS0001, TS0011)
-- **wall_switch_2gang_1way** - Dual gang switch (TS0012, TS0013) ⚠️ _Known mirroring issue_
-- **wall_switch_3gang_1way** - Triple gang switch (TS0003) 🔄 _Untested, community contribution_
+- **wall_switch_2gang_1way** - Dual gang switch (TS0012, TS0013) - ✅ _Sub-device support (2 separate devices)_
+- **wall_switch_3gang_1way** - Triple gang switch (TS0003) - ⏳ _Sub-device support (3 separate devices, pending testing)_
 - **wall_dimmer_1gang_1way** - Touch dimmer (TS0601, TS004F)
 
 ## Quick Start
@@ -63,13 +68,30 @@ The Universal Tuya Zigbee app (109 drivers, 14MB) exceeds Homey's remote debug p
 - **PhysicalButtonMixin** - Distinguishes physical button presses from app commands
 - **VirtualButtonMixin** - Creates virtual buttons for advanced automations
 - **ManufacturerVariationManager** - Device-specific configurations
+- **Sub-Device Support** - Multi-gang switches create separate device cards per gang
+
+## Sub-Device Benefits
+
+Multi-gang switches (2-gang, 3-gang) now create separate device cards:
+
+**For Users:**
+- 🎤 **Natural voice control** - "Turn on Kitchen Light" targets specific gang
+- 🏠 **Zone assignment** - Each gang can be in a different room/zone
+- 🎨 **Cleaner UI** - Separate device cards instead of one with multiple switches
+- 🔄 **Better automations** - Target specific lights directly in flows
+
+**Technical:**
+- Each device controls only its endpoint (no mirroring)
+- Standard Homey flow cards work (turn on/off)
+- Physical button detection per device
+- Requires Homey 12.10.0+ for proper multi-endpoint support
 
 ## Future Plans
 
-- [ ] Resolve 2-gang mirroring issue (waiting for new hardware)
-- [ ] Test 3-gang switch with actual hardware
-- [ ] Implement sub-device support (separate cards per gang)
-- [ ] Add 4-gang switch support
+- [x] ~~Resolve 2-gang mirroring issue~~ - **SOLVED by Homey 12.10.0!**
+- [x] ~~Implement sub-device support~~ - **COMPLETE for 2-gang and 3-gang!**
+- [ ] Test 3-gang switch with community hardware
+- [ ] Add 4-gang switch support (with sub-devices)
 - [ ] Contribute fixes back to Universal Tuya Zigbee app
 - [ ] Potentially release as standalone BSEED-focused app
 
@@ -99,4 +121,4 @@ Same as upstream: MIT License
 ---
 
 **Development Status:** Active (Personal Use)
-**Last Updated:** 2026-01-31
+**Last Updated:** 2026-02-01 - Sub-device implementation complete!

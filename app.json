@@ -378,20 +378,13 @@
       },
       "class": "socket",
       "capabilities": [
-        "onoff",
-        "onoff.gang2"
+        "onoff"
       ],
       "capabilitiesOptions": {
         "onoff": {
           "title": {
-            "en": "Gang 1",
-            "nl": "Gang 1"
-          }
-        },
-        "onoff.gang2": {
-          "title": {
-            "en": "Gang 2",
-            "nl": "Gang 2"
+            "en": "Switch",
+            "nl": "Schakelaar"
           }
         }
       },
@@ -450,6 +443,30 @@
             "bindings": [
               6
             ]
+          }
+        },
+        "devices": {
+          "secondSwitch": {
+            "class": "socket",
+            "capabilities": [
+              "onoff"
+            ],
+            "name": {
+              "en": "Wall Switch 2-Gang 1-Way - Gang 2",
+              "nl": "Muurschakelaar 2-Gang 1-Weg - Gang 2"
+            },
+            "capabilitiesOptions": {
+              "onoff": {
+                "title": {
+                  "en": "Switch",
+                  "nl": "Schakelaar"
+                }
+              }
+            },
+            "images": {
+              "small": "/drivers/wall_switch_2gang_1way/assets/images/small.png",
+              "large": "/drivers/wall_switch_2gang_1way/assets/images/large.png"
+            }
           }
         },
         "learnmode": {
@@ -550,27 +567,13 @@
       },
       "class": "socket",
       "capabilities": [
-        "onoff",
-        "onoff.gang2",
-        "onoff.gang3"
+        "onoff"
       ],
       "capabilitiesOptions": {
         "onoff": {
           "title": {
-            "en": "Gang 1",
-            "nl": "Gang 1"
-          }
-        },
-        "onoff.gang2": {
-          "title": {
-            "en": "Gang 2",
-            "nl": "Gang 2"
-          }
-        },
-        "onoff.gang3": {
-          "title": {
-            "en": "Gang 3",
-            "nl": "Gang 3"
+            "en": "Switch",
+            "nl": "Schakelaar"
           }
         }
       },
@@ -610,7 +613,9 @@
               57344,
               57345
             ],
-            "bindings": []
+            "bindings": [
+              6
+            ]
           },
           "2": {
             "clusters": [
@@ -619,7 +624,9 @@
               6,
               57345
             ],
-            "bindings": []
+            "bindings": [
+              6
+            ]
           },
           "3": {
             "clusters": [
@@ -628,7 +635,55 @@
               6,
               57345
             ],
-            "bindings": []
+            "bindings": [
+              6
+            ]
+          }
+        },
+        "devices": {
+          "secondSwitch": {
+            "class": "socket",
+            "capabilities": [
+              "onoff"
+            ],
+            "name": {
+              "en": "Wall Switch 3-Gang 1-Way - Gang 2",
+              "nl": "Muurschakelaar 3-Gang 1-Weg - Gang 2"
+            },
+            "capabilitiesOptions": {
+              "onoff": {
+                "title": {
+                  "en": "Switch",
+                  "nl": "Schakelaar"
+                }
+              }
+            },
+            "images": {
+              "small": "/drivers/wall_switch_3gang_1way/assets/images/small.png",
+              "large": "/drivers/wall_switch_3gang_1way/assets/images/large.png"
+            }
+          },
+          "thirdSwitch": {
+            "class": "socket",
+            "capabilities": [
+              "onoff"
+            ],
+            "name": {
+              "en": "Wall Switch 3-Gang 1-Way - Gang 3",
+              "nl": "Muurschakelaar 3-Gang 1-Weg - Gang 3"
+            },
+            "capabilitiesOptions": {
+              "onoff": {
+                "title": {
+                  "en": "Switch",
+                  "nl": "Schakelaar"
+                }
+              }
+            },
+            "images": {
+              "small": "/drivers/wall_switch_3gang_1way/assets/images/small.png",
+              "large": "/drivers/wall_switch_3gang_1way/assets/images/large.png"
+            }
           }
         },
         "learnmode": {
@@ -1051,62 +1106,6 @@
     ],
     "actions": [
       {
-        "id": "wall_switch_2gang_1way_turn_on_gang1",
-        "title": {
-          "en": "Turn on Gang 1",
-          "nl": "Zet Gang 1 aan"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=wall_switch_2gang_1way"
-          }
-        ]
-      },
-      {
-        "id": "wall_switch_2gang_1way_turn_off_gang1",
-        "title": {
-          "en": "Turn off Gang 1",
-          "nl": "Zet Gang 1 uit"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=wall_switch_2gang_1way"
-          }
-        ]
-      },
-      {
-        "id": "wall_switch_2gang_1way_turn_on_gang2",
-        "title": {
-          "en": "Turn on Gang 2",
-          "nl": "Zet Gang 2 aan"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=wall_switch_2gang_1way"
-          }
-        ]
-      },
-      {
-        "id": "wall_switch_2gang_1way_turn_off_gang2",
-        "title": {
-          "en": "Turn off Gang 2",
-          "nl": "Zet Gang 2 uit"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=wall_switch_2gang_1way"
-          }
-        ]
-      },
-      {
         "id": "wall_switch_2gang_1way_set_backlight",
         "title": {
           "en": "Set LED indicator mode",
@@ -1152,90 +1151,6 @@
                 }
               }
             ]
-          }
-        ]
-      },
-      {
-        "id": "wall_switch_3gang_1way_turn_on_gang1",
-        "title": {
-          "en": "Turn on Gang 1",
-          "nl": "Zet Gang 1 aan"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=wall_switch_3gang_1way"
-          }
-        ]
-      },
-      {
-        "id": "wall_switch_3gang_1way_turn_off_gang1",
-        "title": {
-          "en": "Turn off Gang 1",
-          "nl": "Zet Gang 1 uit"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=wall_switch_3gang_1way"
-          }
-        ]
-      },
-      {
-        "id": "wall_switch_3gang_1way_turn_on_gang2",
-        "title": {
-          "en": "Turn on Gang 2",
-          "nl": "Zet Gang 2 aan"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=wall_switch_3gang_1way"
-          }
-        ]
-      },
-      {
-        "id": "wall_switch_3gang_1way_turn_off_gang2",
-        "title": {
-          "en": "Turn off Gang 2",
-          "nl": "Zet Gang 2 uit"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=wall_switch_3gang_1way"
-          }
-        ]
-      },
-      {
-        "id": "wall_switch_3gang_1way_turn_on_gang3",
-        "title": {
-          "en": "Turn on Gang 3",
-          "nl": "Zet Gang 3 aan"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=wall_switch_3gang_1way"
-          }
-        ]
-      },
-      {
-        "id": "wall_switch_3gang_1way_turn_off_gang3",
-        "title": {
-          "en": "Turn off Gang 3",
-          "nl": "Zet Gang 3 uit"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=wall_switch_3gang_1way"
           }
         ]
       },

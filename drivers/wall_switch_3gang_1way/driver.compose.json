@@ -5,27 +5,13 @@
   },
   "class": "socket",
   "capabilities": [
-    "onoff",
-    "onoff.gang2",
-    "onoff.gang3"
+    "onoff"
   ],
   "capabilitiesOptions": {
     "onoff": {
       "title": {
-        "en": "Gang 1",
-        "nl": "Gang 1"
-      }
-    },
-    "onoff.gang2": {
-      "title": {
-        "en": "Gang 2",
-        "nl": "Gang 2"
-      }
-    },
-    "onoff.gang3": {
-      "title": {
-        "en": "Gang 3",
-        "nl": "Gang 3"
+        "en": "Switch",
+        "nl": "Schakelaar"
       }
     }
   },
@@ -90,6 +76,48 @@
       "instruction": {
         "en": "Press and hold the reset button for 5 seconds until the LED blinks, or toggle the switch on/off 3 times quickly.",
         "nl": "Houd de resetknop 5 seconden ingedrukt totdat de LED knippert, of schakel de schakelaar 3 keer snel aan/uit."
+      }
+    },
+    "devices": {
+      "secondSwitch": {
+        "class": "socket",
+        "capabilities": ["onoff"],
+        "name": {
+          "en": "Wall Switch 3-Gang 1-Way - Gang 2",
+          "nl": "Muurschakelaar 3-Gang 1-Weg - Gang 2"
+        },
+        "capabilitiesOptions": {
+          "onoff": {
+            "title": {
+              "en": "Switch",
+              "nl": "Schakelaar"
+            }
+          }
+        },
+        "images": {
+          "small": "/drivers/wall_switch_3gang_1way/assets/images/small.png",
+          "large": "/drivers/wall_switch_3gang_1way/assets/images/large.png"
+        }
+      },
+      "thirdSwitch": {
+        "class": "socket",
+        "capabilities": ["onoff"],
+        "name": {
+          "en": "Wall Switch 3-Gang 1-Way - Gang 3",
+          "nl": "Muurschakelaar 3-Gang 1-Weg - Gang 3"
+        },
+        "capabilitiesOptions": {
+          "onoff": {
+            "title": {
+              "en": "Switch",
+              "nl": "Schakelaar"
+            }
+          }
+        },
+        "images": {
+          "small": "/drivers/wall_switch_3gang_1way/assets/images/small.png",
+          "large": "/drivers/wall_switch_3gang_1way/assets/images/large.png"
+        }
       }
     }
   }

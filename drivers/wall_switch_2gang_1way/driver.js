@@ -15,10 +15,10 @@ class WallSwitch2Gang1WayDriver extends BaseZigBeeDriver {
   }
 
   /**
-   * Register flow cards for physical button triggers (both gangs)
+   * Register flow cards for physical button triggers and backlight control
    */
   _registerFlowCards() {
-    // Gang 1-2 triggers
+    // Gang 1-2 triggers (physical button detection)
     try {
       this.homey.flow.getDeviceTriggerCard('wall_switch_2gang_1way_gang1_turned_on');
       this.homey.flow.getDeviceTriggerCard('wall_switch_2gang_1way_gang1_turned_off');
@@ -26,54 +26,6 @@ class WallSwitch2Gang1WayDriver extends BaseZigBeeDriver {
       this.homey.flow.getDeviceTriggerCard('wall_switch_2gang_1way_gang2_turned_off');
     } catch (err) {
       this.error('Failed to register trigger cards:', err.message);
-    }
-
-    // ACTION: Turn on Gang 1
-    try {
-      this.homey.flow.getActionCard('wall_switch_2gang_1way_turn_on_gang1')
-        .registerRunListener(async (args) => {
-          if (!args.device) return false;
-          await args.device.setCapabilityValue('onoff', true);
-          return true;
-        });
-    } catch (err) {
-      this.error('Failed to register turn_on_gang1 flow card:', err.message);
-    }
-
-    // ACTION: Turn off Gang 1
-    try {
-      this.homey.flow.getActionCard('wall_switch_2gang_1way_turn_off_gang1')
-        .registerRunListener(async (args) => {
-          if (!args.device) return false;
-          await args.device.setCapabilityValue('onoff', false);
-          return true;
-        });
-    } catch (err) {
-      this.error('Failed to register turn_off_gang1 flow card:', err.message);
-    }
-
-    // ACTION: Turn on Gang 2
-    try {
-      this.homey.flow.getActionCard('wall_switch_2gang_1way_turn_on_gang2')
-        .registerRunListener(async (args) => {
-          if (!args.device) return false;
-          await args.device.setCapabilityValue('onoff.gang2', true);
-          return true;
-        });
-    } catch (err) {
-      this.error('Failed to register turn_on_gang2 flow card:', err.message);
-    }
-
-    // ACTION: Turn off Gang 2
-    try {
-      this.homey.flow.getActionCard('wall_switch_2gang_1way_turn_off_gang2')
-        .registerRunListener(async (args) => {
-          if (!args.device) return false;
-          await args.device.setCapabilityValue('onoff.gang2', false);
-          return true;
-        });
-    } catch (err) {
-      this.error('Failed to register turn_off_gang2 flow card:', err.message);
     }
 
     // ACTION: Set backlight mode

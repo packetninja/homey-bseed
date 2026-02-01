@@ -5,20 +5,13 @@
   },
   "class": "socket",
   "capabilities": [
-    "onoff",
-    "onoff.gang2"
+    "onoff"
   ],
   "capabilitiesOptions": {
     "onoff": {
       "title": {
-        "en": "Gang 1",
-        "nl": "Gang 1"
-      }
-    },
-    "onoff.gang2": {
-      "title": {
-        "en": "Gang 2",
-        "nl": "Gang 2"
+        "en": "Switch",
+        "nl": "Schakelaar"
       }
     }
   },
@@ -37,6 +30,30 @@
   "images": {
     "small": "/drivers/wall_switch_2gang_1way/assets/images/small.png",
     "large": "/drivers/wall_switch_2gang_1way/assets/images/large.png"
+  },
+  "devices": {
+    "secondSwitch": {
+      "class": "socket",
+      "capabilities": [
+        "onoff"
+      ],
+      "name": {
+        "en": "Wall Switch 2-Gang 1-Way - Gang 2",
+        "nl": "Muurschakelaar 2-Gang 1-Weg - Gang 2"
+      },
+      "capabilitiesOptions": {
+        "onoff": {
+          "title": {
+            "en": "Switch",
+            "nl": "Schakelaar"
+          }
+        }
+      },
+      "images": {
+        "small": "/drivers/wall_switch_2gang_1way/assets/images/small.png",
+        "large": "/drivers/wall_switch_2gang_1way/assets/images/large.png"
+      }
+    }
   },
   "zigbee": {
     "manufacturerName": [

@@ -18,12 +18,10 @@ class WallSwitch2Gang1WayDriver extends BaseZigBeeDriver {
    * Register flow cards for physical button triggers and backlight control
    */
   _registerFlowCards() {
-    // Gang 1-2 triggers (physical button detection)
+    // Physical button triggers
     try {
-      this.homey.flow.getDeviceTriggerCard('wall_switch_2gang_1way_gang1_turned_on');
-      this.homey.flow.getDeviceTriggerCard('wall_switch_2gang_1way_gang1_turned_off');
-      this.homey.flow.getDeviceTriggerCard('wall_switch_2gang_1way_gang2_turned_on');
-      this.homey.flow.getDeviceTriggerCard('wall_switch_2gang_1way_gang2_turned_off');
+      this.homey.flow.getDeviceTriggerCard('wall_switch_2gang_1way_turned_on_physical');
+      this.homey.flow.getDeviceTriggerCard('wall_switch_2gang_1way_turned_off_physical');
     } catch (err) {
       this.error('Failed to register trigger cards:', err.message);
     }

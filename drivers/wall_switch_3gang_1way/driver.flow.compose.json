@@ -1,74 +1,26 @@
 {
   "triggers": [
     {
-      "id": "wall_switch_3gang_1way_gang1_turned_on",
+      "id": "wall_switch_3gang_1way_turned_on_physical",
       "title": {
-        "en": "Gang 1 turned on (physical button)",
-        "nl": "Gang 1 aangezet (fysieke knop)"
+        "en": "Turned on (physical button)",
+        "nl": "Aangezet (fysieke knop)"
       },
       "hint": {
-        "en": "Triggered when gang 1 is turned on using the physical button",
-        "nl": "Geactiveerd wanneer gang 1 wordt aangezet met de fysieke knop"
+        "en": "Triggered when the physical button is pressed to turn on",
+        "nl": "Geactiveerd wanneer de fysieke knop wordt ingedrukt om aan te zetten"
       },
       "args": []
     },
     {
-      "id": "wall_switch_3gang_1way_gang1_turned_off",
+      "id": "wall_switch_3gang_1way_turned_off_physical",
       "title": {
-        "en": "Gang 1 turned off (physical button)",
-        "nl": "Gang 1 uitgezet (fysieke knop)"
+        "en": "Turned off (physical button)",
+        "nl": "Uitgezet (fysieke knop)"
       },
       "hint": {
-        "en": "Triggered when gang 1 is turned off using the physical button",
-        "nl": "Geactiveerd wanneer gang 1 wordt uitgezet met de fysieke knop"
-      },
-      "args": []
-    },
-    {
-      "id": "wall_switch_3gang_1way_gang2_turned_on",
-      "title": {
-        "en": "Gang 2 turned on (physical button)",
-        "nl": "Gang 2 aangezet (fysieke knop)"
-      },
-      "hint": {
-        "en": "Triggered when gang 2 is turned on using the physical button",
-        "nl": "Geactiveerd wanneer gang 2 wordt aangezet met de fysieke knop"
-      },
-      "args": []
-    },
-    {
-      "id": "wall_switch_3gang_1way_gang2_turned_off",
-      "title": {
-        "en": "Gang 2 turned off (physical button)",
-        "nl": "Gang 2 uitgezet (fysieke knop)"
-      },
-      "hint": {
-        "en": "Triggered when gang 2 is turned off using the physical button",
-        "nl": "Geactiveerd wanneer gang 2 wordt uitgezet met de fysieke knop"
-      },
-      "args": []
-    },
-    {
-      "id": "wall_switch_3gang_1way_gang3_turned_on",
-      "title": {
-        "en": "Gang 3 turned on (physical button)",
-        "nl": "Gang 3 aangezet (fysieke knop)"
-      },
-      "hint": {
-        "en": "Triggered when gang 3 is turned on using the physical button",
-        "nl": "Geactiveerd wanneer gang 3 wordt aangezet met de fysieke knop"
-      },
-      "args": []
-    },
-    {
-      "id": "wall_switch_3gang_1way_gang3_turned_off",
-      "title": {
-        "en": "Gang 3 turned off (physical button)",
-        "nl": "Gang 3 uitgezet (fysieke knop)"
-      },
-      "hint": {
-        "en": "Triggered when gang 3 is turned off using the physical button",
-        "nl": "Geactiveerd wanneer gang 3 wordt uitgezet met de fysieke knop"
+        "en": "Triggered when the physical button is pressed to turn off",
+        "nl": "Geactiveerd wanneer de fysieke knop wordt ingedrukt om uit te zetten"
       },
       "args": []
     }

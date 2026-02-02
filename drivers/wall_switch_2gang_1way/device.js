@@ -118,17 +118,10 @@ class WallSwitch2Gang1WayDevice extends PhysicalButtonMixin(VirtualButtonMixin(H
 
         // Trigger flow cards for physical button presses
         if (isPhysical) {
-          // Try gang-specific flow card first
-          const specificFlowCardId = `wall_switch_2gang_1way_gang${gangNumber}_turned_${value ? 'on' : 'off'}`;
-          this.homey.flow.getDeviceTriggerCard(specificFlowCardId)
+          const flowCardId = `wall_switch_2gang_1way_turned_${value ? 'on' : 'off'}_physical`;
+          this.homey.flow.getDeviceTriggerCard(flowCardId)
             .trigger(this, {}, {})
-            .catch(() => {
-              // If gang-specific doesn't exist, try generic
-              const genericFlowCardId = `wall_switch_2gang_1way_turned_${value ? 'on' : 'off'}`;
-              this.homey.flow.getDeviceTriggerCard(genericFlowCardId)
-                .trigger(this, {}, {})
-                .catch(() => {});
-            });
+            .catch(err => this.error('Failed to trigger flow card:', err));
         }
       }
     });

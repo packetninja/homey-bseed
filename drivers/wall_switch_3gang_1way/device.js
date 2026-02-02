@@ -214,9 +214,6 @@ class WallSwitch3Gang1WayDevice extends PhysicalButtonMixin(VirtualButtonMixin(H
     // Initialize physical button detection for Gang 1 only
     await this.initPhysicalButtonDetection(zclNode);
 
-    // Apply gang name
-    await this._applyGangName();
-
     // Create sub-devices for Gang 2 and 3 if they don't exist
     await this._ensureSubDevicesExist().catch(err => {
       this.error('[PRIMARY] Failed to create sub-devices:', err);
@@ -281,22 +278,6 @@ class WallSwitch3Gang1WayDevice extends PhysicalButtonMixin(VirtualButtonMixin(H
       }
     } catch (err) {
       this.error('[PRIMARY] Error ensuring sub-devices:', err);
-    }
-  }
-
-  /**
-   * Apply gang name from settings
-   */
-  async _applyGangName() {
-    const gang1Name = this.getSetting('gang1_name') || 'Switch';
-
-    this.log(`Applying gang name: "${gang1Name}"`);
-
-    try {
-      await this.setCapabilityOptions('onoff', { title: gang1Name });
-      this.log('✅ Gang name applied');
-    } catch (err) {
-      this.error('Failed to apply gang name:', err);
     }
   }
 

@@ -2,54 +2,6 @@
   {
     "type": "group",
     "label": {
-      "en": "🏷️ Gang Names",
-      "nl": "🏷️ Gang Namen"
-    },
-    "children": [
-      {
-        "id": "gang1_name",
-        "type": "text",
-        "label": {
-          "en": "Gang 1 Custom Name",
-          "nl": "Gang 1 Aangepaste Naam"
-        },
-        "hint": {
-          "en": "Custom name for Gang 1 (e.g., 'Inside Lights')",
-          "nl": "Aangepaste naam voor Gang 1 (bijv. 'Binnen Verlichting')"
-        },
-        "value": "Gang 1"
-      },
-      {
-        "id": "gang2_name",
-        "type": "text",
-        "label": {
-          "en": "Gang 2 Custom Name",
-          "nl": "Gang 2 Aangepaste Naam"
-        },
-        "hint": {
-          "en": "Custom name for Gang 2 (e.g., 'Outside Lights')",
-          "nl": "Aangepaste naam voor Gang 2 (bijv. 'Buiten Verlichting')"
-        },
-        "value": "Gang 2"
-      },
-      {
-        "id": "gang3_name",
-        "type": "text",
-        "label": {
-          "en": "Gang 3 Custom Name",
-          "nl": "Gang 3 Aangepaste Naam"
-        },
-        "hint": {
-          "en": "Custom name for Gang 3 (e.g., 'Patio Lights')",
-          "nl": "Aangepaste naam voor Gang 3 (bijv. 'Terras Verlichting')"
-        },
-        "value": "Gang 3"
-      }
-    ]
-  },
-  {
-    "type": "group",
-    "label": {
       "en": "💡 LED Indicator (Backlight)",
       "nl": "💡 LED-indicator (Achtergrondverlichting)"
     },

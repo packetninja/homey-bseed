@@ -163,6 +163,11 @@ class WallDimmer1Gang1Way extends TuyaSpecificClusterDevice {
   async _applyInitialSettings() {
     if (this._settingsApplied) return;
     this._settingsApplied = true;
+    // Once per device, not on every app start: the dimmer keeps these settings itself,
+    // and later changes go through onSettings(). Writing them on every start sent one
+    // frame per dimmer (power_on_behavior "0" always passed the check) in the start burst.
+    if (this.getStoreValue('initial_settings_applied')) return;
+    await this.setStoreValue('initial_settings_applied', true).catch(() => {});
 
     try {
       const settings = this.getSettings();
@@ -377,6 +382,8 @@ class WallDimmer1Gang1Way extends TuyaSpecificClusterDevice {
 
       const transid = Math.floor(Math.random() * 256);
 
+      // Fire and forget: the dimmer confirms with a DP report, not with a ZCL response.
+      // Waiting held a send slot for up to 10 s per command.
       await tuyaCluster.datapoint({
         status: 0,
         transid,
@@ -384,7 +391,7 @@ class WallDimmer1Gang1Way extends TuyaSpecificClusterDevice {
         datatype,
         length: lengthBuffer,
         data: dataBuffer,
-      });
+      }, { waitForResponse: false, disableDefaultResponse: true });
 
       if (DEBUG_MODE) {
         this.log('✅ Tuya command sent');

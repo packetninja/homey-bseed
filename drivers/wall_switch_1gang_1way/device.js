@@ -65,6 +65,7 @@ class WallSwitch1Gang1WayDevice extends PhysicalButtonMixin(HybridSwitchBase) {
     this.registerCapabilityListener('onoff', async (value) => {
       this.log('onoff capability changed to:', value, '(APP)');
       this._markAppCommand();
+      this._lastAppOnoff = { value: Boolean(value), at: Date.now() };
       // Call parent's capability handler
       return this._setGangOnOff(1, value);
     });
@@ -76,7 +77,11 @@ class WallSwitch1Gang1WayDevice extends PhysicalButtonMixin(HybridSwitchBase) {
         // Check if this is an onoff change
         if (dp === 1) {
           const state = Boolean(data?.value ?? data);
-          const isPhysicalPress = reportingEvent && !this._appCommandPending;
+          // A late confirmation of what the app itself sent (busy network, > 2 s) is not a press;
+          // counted as one it fired the sync flows in a loop (2026-10-27).
+          const echo = this._lastAppOnoff && this._lastAppOnoff.value === state
+            && Date.now() - this._lastAppOnoff.at < 60 * 1000;
+          const isPhysicalPress = reportingEvent && !this._appCommandPending && !echo;
 
           // Only trigger flows if state actually changed and it's physical
           if (this._lastOnoffState !== state) {

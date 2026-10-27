@@ -256,7 +256,8 @@ class WallDimmer1Gang1Way extends TuyaSpecificClusterDevice {
     }
 
     // v5.5.854: Physical = reporting event AND no pending app command
-    const isPhysicalPress = isReportingEvent && !this._appCommandPending;
+    const isPhysicalPress = isReportingEvent && !this._appCommandPending
+      && !this._matchesRecentAppCommand(data.dp, data.data);
 
     // Handle state (onoff)
     if (data.dp === dataPoints.state) {
@@ -381,6 +382,7 @@ class WallDimmer1Gang1Way extends TuyaSpecificClusterDevice {
       lengthBuffer.writeUInt16BE(dataBuffer.length, 0);
 
       const transid = Math.floor(Math.random() * 256);
+      this._rememberAppCommand(dp, type === 'bool' ? (value ? 1 : 0) : Number(value));
 
       // Fire and forget: the dimmer confirms with a DP report, not with a ZCL response.
       // Waiting held a send slot for up to 10 s per command.
@@ -401,6 +403,36 @@ class WallDimmer1Gang1Way extends TuyaSpecificClusterDevice {
       this.error('Failed to send Tuya command:', err);
       throw err;
     }
+  }
+
+  /**
+   * Remember the last value the app sent per datapoint.
+   * @param {number} dp - Datapoint
+   * @param {number} value - Raw value sent (bool as 0/1, brightness 10-1000)
+   */
+  _rememberAppCommand(dp, value) {
+    if (!this._sentValues) this._sentValues = {};
+    this._sentValues[dp] = { value, at: Date.now() };
+  }
+
+  /**
+   * True when a report repeats what the app itself sent in the last 60 s. On a busy network the
+   * dimmer's confirmation can arrive well after the 2-s app-command window; counted as a physical
+   * press it fired the sync flows, which switched the other switches, whose late confirmations
+   * fired the flows again: lights flipping on and off (2026-10-27).
+   * @param {number} dp - Datapoint of the report
+   * @param {Buffer|Array|number} raw - Reported data
+   * @returns {boolean}
+   */
+  _matchesRecentAppCommand(dp, raw) {
+    const sent = this._sentValues && this._sentValues[dp];
+    if (!sent || Date.now() - sent.at > 60 * 1000) return false;
+    let value;
+    if (Buffer.isBuffer(raw)) value = raw.length >= 4 ? raw.readInt32BE(0) : raw.readUInt8(0);
+    else if (Array.isArray(raw)) value = raw.length >= 4 ? Buffer.from(raw).readInt32BE(0) : raw[0];
+    else value = Number(raw);
+    if (dp === dataPoints.brightness) return Math.abs(value - sent.value) <= 15;
+    return value === sent.value;
   }
 
   /**

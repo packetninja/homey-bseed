@@ -4,7 +4,8 @@
   "description": "App for BSEED devicdes",
   "main": "app.js",
   "dependencies": {
-    "homey-zigbeedriver": "^2.2.2"
+    "homey-zigbeedriver": "^2.2.18",
+    "zigbee-clusters": "^3.9.1"
   },
   "devDependencies": {
     "homey": "^3.12.2"

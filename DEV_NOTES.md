@@ -306,3 +306,30 @@ Check device settings → Debug Information → Protocol Mode
 **Last Updated:** 2026-01-30
 **Maintained By:** Attilla de Groot (attilla@packet.ninja)
 **Main App:** Universal Tuya Zigbee (com.dlnraja.tuya.zigbee) by Dylan Rajasekaram
+
+
+## 2026-10-27: Tuya storm recovery and physical detection
+
+In the homeautomation workspace, deployment state and house-specific evidence live in
+`../homey/README.md` and `../notes/zigbee-send-outage-2026-10-26.md`. Those files belong
+to the separate private repository; this app repository documents the reusable fixes below.
+
+- `TuyaPendingReplies` combines only identical in-flight successful default responses,
+  preserving every incoming callback and at most one trailing retry after failure. Do not
+  turn this into a permanent successful-response cache or suppress distinct payloads.
+- Attachments are detached on device deletion; one shared 30-second diagnostic timer reports
+  tracked native sends. Overflow pass-through sends are counted separately, not as tracked attempts.
+- TS0601 first DP1/DP2 reports establish baselines before physical detection is enabled. Initialize
+  fields before parent listeners; reports can arrive while parent initialization is running.
+- Controlled Hallway tests showed outgoing cmd00 echoes as cmd01 with exact status/transid/DP/type/data,
+  while physical changes are cmd02 with the independent device sequence. Custom cluster event
+  names are misleading: `reporting`=01, `response`=02. Separate these sequence domains.
+- `TuyaCommandTracker` retains exact identities (64 commands,120 seconds), including consumed
+  identities for retransmits. Latest command order and physical revision prevent stale echoes
+  reverting state. Identical random-ID collisions select the newest unconsumed command.
+- Never substitute a value-only history or a blanket time window: the live presence-ON then
+  physical-OFF/ON/OFF test proved the old guard missed the real ON. Unmatched cmd01 still follows
+  legacy behavior; ledger expiry/eviction/restart and untested firmware remain attribution limits.
+- `npm test` runs protocol/lifecycle and captured-sequence regression tests. Debug validation is
+  `node_modules/.bin/homey app validate --level debug`; publish validation has an existing image issue.
+- A debug observer is trial instrumentation only. Remove it before persistent app installation.

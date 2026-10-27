@@ -2,6 +2,7 @@
 
 const TuyaSpecificClusterDevice = require('../../lib/tuya/TuyaSpecificClusterDevice');
 const {CLUSTER} = require('zigbee-clusters');
+const { TuyaCommandTracker } = require('../../lib/utils/TuyaCommandTracker');
 
 // v5.5.755: PR #112 (packetninja) - Debug mode for detailed logging
 // v5.5.799: Enhanced with settings support and robustness improvements
@@ -36,18 +37,20 @@ const POWER_ON_BEHAVIOR = {
 class WallDimmer1Gang1Way extends TuyaSpecificClusterDevice {
 
   async onNodeInit({zclNode}) {
+    // Reports may arrive while the parent installs its Tuya listeners. Establish
+    // their baselines first so startup state is never interpreted as a press.
+    this._lastOnoffState = null;
+    this._lastBrightnessValue = null;
+    this._hasStateBaseline = false;
+    this._hasBrightnessBaseline = false;
+    this._commandTracker = new TuyaCommandTracker();
+
     this.log('WallDimmer1Gang1Way initializing...');
 
     await super.onNodeInit({zclNode});
 
     this.printNode();
 
-    // v5.5.755: PR #112 (packetninja) - Track state for detecting physical button presses
-    this._lastOnoffState = null;
-    this._lastBrightnessValue = null;
-    this._appCommandPending = false;  // Track if app sent command recently
-    this._appCommandTimeout = null;
-    
     // v5.5.799: Track settings to avoid unnecessary writes
     this._settingsApplied = false;
 
@@ -69,13 +72,11 @@ class WallDimmer1Gang1Way extends TuyaSpecificClusterDevice {
     
     this.registerCapabilityListener('onoff', async (value) => {
       this.log('onoff capability changed to:', value, '(APP)');
-      this._markAppCommand();  // v5.5.755: PR #112 - Mark as app command
       await this.sendTuyaCommand(dataPoints.state, value, 'bool');
     });
     
     this.registerCapabilityListener('dim', async (value) => {
       this.log('Dim capability changed to:', value, '(APP)');
-      this._markAppCommand();  // v5.5.755: PR #112 - Mark as app command
       const brightness = Math.round(10 + (value * 990));
       this.log('Converted to Tuya brightness:', brightness);
       await this.sendTuyaCommand(dataPoints.brightness, brightness, 'value');
@@ -218,18 +219,20 @@ class WallDimmer1Gang1Way extends TuyaSpecificClusterDevice {
     }
   }
 
-  /**
-   * v5.5.854: Override parent's handleTuyaResponse to detect physical button presses
-   * Parent class TuyaSpecificClusterDevice calls this for 'response' events
-   * Physical button presses come as 'response' events when no app command is pending
-   */
-  handleTuyaResponse(data) {
-    const isPhysical = !this._appCommandPending;
-    // Only log if debug mode is enabled
-    if (DEBUG_MODE) {
-      this.log(`>>> Tuya response (dp: ${data?.dp}) - ${isPhysical ? 'PHYSICAL' : 'APP'}`);
-    }
-    this.handleTuyaDataReport(data, isPhysical);
+  /** Classify exact app echoes before duplicate filtering consumes their identity. */
+  classifyTuyaFrame(data, context) {
+    return this._commandTracker.classify(data, context.commandId);
+  }
+
+  _isRepeatedTuyaFrame(data, context = {}) {
+    return this._commandTracker.isRepeated(data, context.commandId);
+  }
+
+  /** Preserve physical reports even when their value matches a recent app command. */
+  handleTuyaResponse(data, context = {}) {
+    const origin = context.origin || {};
+    if (origin.stale || origin.duplicate) return;
+    this.handleTuyaDataReport(data, !origin.matched);
   }
 
   /**
@@ -255,32 +258,37 @@ class WallDimmer1Gang1Way extends TuyaSpecificClusterDevice {
       return;
     }
 
-    // v5.5.854: Physical = reporting event AND no pending app command
-    const isPhysicalPress = isReportingEvent && !this._appCommandPending
-      && !this._matchesRecentAppCommand(data.dp, data.data);
+    const isPhysicalPress = isReportingEvent;
 
     // Handle state (onoff)
     if (data.dp === dataPoints.state) {
       let state;
       if (Buffer.isBuffer(data.data)) {
+        if (data.data.length < 1) return;
         state = data.data.readUInt8(0) === 1;
-      } else if (Array.isArray(data.data)) {
+      } else if (Array.isArray(data.data) && data.data.length >= 1) {
         state = data.data[0] === 1;
-      } else {
+      } else if (typeof data.data === 'boolean' || (typeof data.data === 'number' && Number.isFinite(data.data))) {
         state = Boolean(data.data);
+      } else {
+        return;
       }
+      const isStateBaseline = !this._hasStateBaseline;
       
       // Only process if state actually changed (heartbeat filter)
       if (this._lastOnoffState !== state) {
-        if (DEBUG_MODE || isPhysicalPress) {
-          this.log(`State changed: ${this._lastOnoffState} → ${state} (${isPhysicalPress ? 'PHYSICAL' : 'APP'})`);
+        const isPhysicalChange = isPhysicalPress && !isStateBaseline;
+        if (DEBUG_MODE || isPhysicalChange) {
+          this.log(`State changed: ${this._lastOnoffState} → ${state} (${isPhysicalChange ? 'PHYSICAL' : 'APP'})`);
         }
 
+        if (isPhysicalPress) this._commandTracker?.noteDeviceChange(data.dp);
         this._lastOnoffState = state;
+        this._hasStateBaseline = true;
         this.setCapabilityValue('onoff', state).catch(this.error);
 
         // Trigger flow cards ONLY if this is a physical button press
-        if (isPhysicalPress) {
+        if (isPhysicalChange) {
           const flowCardId = state ? 'wall_dimmer_1gang_1way_turned_on' : 'wall_dimmer_1gang_1way_turned_off';
           this.log(`Triggering: ${flowCardId}`);
           this.homey.flow.getDeviceTriggerCard(flowCardId)
@@ -294,30 +302,37 @@ class WallDimmer1Gang1Way extends TuyaSpecificClusterDevice {
     if (data.dp === dataPoints.brightness) {
       let brightnessRaw;
       if (Buffer.isBuffer(data.data)) {
+        if (data.data.length < 4) return;
         brightnessRaw = data.data.readInt32BE(0);
       } else if (Array.isArray(data.data) && data.data.length >= 4) {
         brightnessRaw = Buffer.from(data.data).readInt32BE(0);
+      } else if (typeof data.data === 'number' && Number.isFinite(data.data)) {
+        brightnessRaw = data.data;
       } else {
-        brightnessRaw = data.data || 0;
+        return;
       }
+      const isBrightnessBaseline = !this._hasBrightnessBaseline;
       
       const brightness = Math.max(0, Math.min(1, (brightnessRaw - 10) / 990));
       
       // Only process if brightness changed significantly (~1%)
       const changeThreshold = 10;
       if (this._lastBrightnessValue === null || Math.abs(brightnessRaw - this._lastBrightnessValue) >= changeThreshold) {
-        if (DEBUG_MODE || isPhysicalPress) {
-          this.log(`Brightness changed: ${this._lastBrightnessValue} → ${brightnessRaw} (${brightness.toFixed(2)}) (${isPhysicalPress ? 'PHYSICAL' : 'APP'})`);
+        const isPhysicalChange = isPhysicalPress && !isBrightnessBaseline;
+        if (DEBUG_MODE || isPhysicalChange) {
+          this.log(`Brightness changed: ${this._lastBrightnessValue} → ${brightnessRaw} (${brightness.toFixed(2)}) (${isPhysicalChange ? 'PHYSICAL' : 'APP'})`);
         }
 
-        const brightnessIncreased = this._lastBrightnessValue !== null && brightnessRaw > this._lastBrightnessValue;
-        const brightnessDecreased = this._lastBrightnessValue !== null && brightnessRaw < this._lastBrightnessValue;
+        const brightnessIncreased = !isBrightnessBaseline && this._lastBrightnessValue !== null && brightnessRaw > this._lastBrightnessValue;
+        const brightnessDecreased = !isBrightnessBaseline && this._lastBrightnessValue !== null && brightnessRaw < this._lastBrightnessValue;
 
+        if (isPhysicalPress) this._commandTracker?.noteDeviceChange(data.dp);
         this._lastBrightnessValue = brightnessRaw;
+        this._hasBrightnessBaseline = true;
         this.setCapabilityValue('dim', brightness).catch(this.error);
 
         // Trigger flow cards ONLY if this is a physical button press
-        if (isPhysicalPress) {
+        if (isPhysicalChange) {
           if (brightnessIncreased) {
             this.log('Triggering: wall_dimmer_1gang_1way_brightness_increased (PHYSICAL)');
             this.homey.flow.getDeviceTriggerCard('wall_dimmer_1gang_1way_brightness_increased')
@@ -382,7 +397,7 @@ class WallDimmer1Gang1Way extends TuyaSpecificClusterDevice {
       lengthBuffer.writeUInt16BE(dataBuffer.length, 0);
 
       const transid = Math.floor(Math.random() * 256);
-      this._rememberAppCommand(dp, type === 'bool' ? (value ? 1 : 0) : Number(value));
+      this._commandTracker.record({ status: 0, transid, dp, datatype, data: dataBuffer });
 
       // Fire and forget: the dimmer confirms with a DP report, not with a ZCL response.
       // Waiting held a send slot for up to 10 s per command.
@@ -405,53 +420,9 @@ class WallDimmer1Gang1Way extends TuyaSpecificClusterDevice {
     }
   }
 
-  /**
-   * Remember the last value the app sent per datapoint.
-   * @param {number} dp - Datapoint
-   * @param {number} value - Raw value sent (bool as 0/1, brightness 10-1000)
-   */
-  _rememberAppCommand(dp, value) {
-    if (!this._sentValues) this._sentValues = {};
-    this._sentValues[dp] = { value, at: Date.now() };
-  }
-
-  /**
-   * True when a report repeats what the app itself sent in the last 60 s. On a busy network the
-   * dimmer's confirmation can arrive well after the 2-s app-command window; counted as a physical
-   * press it fired the sync flows, which switched the other switches, whose late confirmations
-   * fired the flows again: lights flipping on and off (2026-10-27).
-   * @param {number} dp - Datapoint of the report
-   * @param {Buffer|Array|number} raw - Reported data
-   * @returns {boolean}
-   */
-  _matchesRecentAppCommand(dp, raw) {
-    const sent = this._sentValues && this._sentValues[dp];
-    if (!sent || Date.now() - sent.at > 60 * 1000) return false;
-    let value;
-    if (Buffer.isBuffer(raw)) value = raw.length >= 4 ? raw.readInt32BE(0) : raw.readUInt8(0);
-    else if (Array.isArray(raw)) value = raw.length >= 4 ? Buffer.from(raw).readInt32BE(0) : raw[0];
-    else value = Number(raw);
-    if (dp === dataPoints.brightness) return Math.abs(value - sent.value) <= 15;
-    return value === sent.value;
-  }
-
-  /**
-   * v5.5.755: PR #112 (packetninja) - Mark that an app command was sent
-   * Used to distinguish physical button presses from app commands
-   */
-  _markAppCommand() {
-    this._appCommandPending = true;
-    if (this._appCommandTimeout) {
-      clearTimeout(this._appCommandTimeout);
-    }
-    // Clear after 2 seconds - device should respond within this time
-    this._appCommandTimeout = setTimeout(() => {
-      this._appCommandPending = false;
-    }, 2000);
-  }
-
   onDeleted() {
     this.log('Switch Touch Dimmer (1 Gang) removed');
+    super.onDeleted();
   }
 
 }
